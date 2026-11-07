@@ -2153,15 +2153,17 @@ inline void passivbot_single_coin_impl(
                 account_peak = eqf;
                 account_peak_k = kf;
             }
-            if (eqf > run_peak) {
+            // Strategy drawdown uses the raw marked equity, including terminal
+            // losses below the account liquidation floor (exact record_hsl_analysis).
+            if (equity > run_peak) {
                 if (last_high_k >= 0.0f) {
                     recovery_max_min = fmax(recovery_max_min, kf - last_high_k);
                 }
                 last_high_k = kf;
-                run_peak = eqf;
+                run_peak = equity;
             }
             float dd = fmax(
-                (run_peak - eqf) / fmax(fabs(run_peak), 1.0e-12f), 0.0f
+                (run_peak - equity) / fmax(fabs(run_peak), 1.0e-12f), 0.0f
             );
             max_dd = fmax(max_dd, dd);
             day_end = eqf;

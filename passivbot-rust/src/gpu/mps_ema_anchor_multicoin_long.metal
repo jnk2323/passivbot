@@ -3489,17 +3489,19 @@ inline void passivbot_ema_anchor_multicoin_impl(
                 account_peak = effective_equity;
                 account_peak_k = float(k);
             }
-            if (effective_equity > run_peak) {
+            // Strategy drawdown uses the raw marked equity, including terminal
+            // losses below the account liquidation floor (exact record_hsl_analysis).
+            if (equity > run_peak) {
                 if (last_high_k >= 0.0f) {
                     recovery_max_min = fmax(
                         recovery_max_min, float(k) - last_high_k
                     );
                 }
                 last_high_k = float(k);
-                run_peak = effective_equity;
+                run_peak = equity;
             }
             float drawdown = fmax(
-                (run_peak - effective_equity) / fmax(fabs(run_peak), 1.0e-12f), 0.0f
+                (run_peak - equity) / fmax(fabs(run_peak), 1.0e-12f), 0.0f
             );
             max_dd = fmax(max_dd, drawdown);
             day_end = effective_equity;
@@ -4483,17 +4485,19 @@ inline void passivbot_ema_anchor_multicoin_fused_impl(
                 account_peak = effective_equity;
                 account_peak_k = float(k);
             }
-            if (effective_equity > run_peak) {
+            // Strategy drawdown uses the raw marked equity, including terminal
+            // losses below the account liquidation floor (exact record_hsl_analysis).
+            if (equity > run_peak) {
                 if (last_high_k >= 0.0f) {
                     recovery_max_min = fmax(
                         recovery_max_min, float(k) - last_high_k
                     );
                 }
                 last_high_k = float(k);
-                run_peak = effective_equity;
+                run_peak = equity;
             }
             float drawdown = fmax(
-                (run_peak - effective_equity)
+                (run_peak - equity)
                     / fmax(fabs(run_peak), 1.0e-12f),
                 0.0f
             );
